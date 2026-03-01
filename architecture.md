@@ -1,85 +1,30 @@
-
----
-
-# 📄 architecture.md
+### 2. `architecture.md` - โครงสร้างและฐานข้อมูล
 
 ```markdown
-# 🏗 System Architecture
+# 🏗️ Architecture & Database Design
 
-## 1️⃣ Database Design
-
-### ตาราง users
-
-```sql
-CREATE TABLE users (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    student_code VARCHAR(20) UNIQUE NULL,
-    full_name VARCHAR(150) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
-    role ENUM('admin','user') DEFAULT 'user',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-#ตาราง equipment
-CREATE TABLE equipment (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(150) NOT NULL,
-    category VARCHAR(100) NOT NULL,
-    total_quantity INT NOT NULL DEFAULT 0,
-    available_quantity INT NOT NULL DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-#ตาราง borrowings
-CREATE TABLE borrowings (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    equipment_id INT NOT NULL,
-    quantity INT NOT NULL,
-    borrow_date DATETIME NOT NULL,
-    due_date DATETIME NOT NULL,
-    return_date DATETIME NULL,
-    status ENUM('borrowed','returned','cancelled') DEFAULT 'borrowed',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES users(id),
-    FOREIGN KEY (equipment_id) REFERENCES equipment(id)
-);
-2️⃣ Database Relationship
-
-users (1) ---- (N) borrowings (N) ---- (1) equipment
-
-3️⃣ Folder Structure
-/sports-borrowing-system
+## 📂 โครงสร้างไฟล์ (File Structure)
+```text
+sports-borrow-sys/
 │
-├── /app
-│   ├── controllers
-│   ├── models
-│   └── middleware
-│
-├── /api
-│   ├── auth
-│   │   ├── login.php
-│   │   └── logout.php
-│   ├── equipment
-│   └── borrowing
-│
-├── /config
-│   └── database.php
-│
-├── /public
-│   ├── login.php
-│   ├── dashboard.php
-│   ├── assets
-│
-├── docker-compose.yml
-└── README.md
-4️⃣ Data Flow (Login Example)
-
-User กรอกข้อมูลที่ login.php
-
-AJAX ส่งไปที่ /api/auth/login.php
-
-PHP ตรวจสอบด้วย PDO
-
-ส่ง JSON Response
-
-Frontend แสดงผลด้วย jQuery Confirm
+├── config/
+│   └── database.php       # ตั้งค่าการเชื่อมต่อ PDO
+├── api/
+│   ├── auth.php           # จัดการ Login/Logout (AJAX)
+│   ├── equipments.php     # CRUD อุปกรณ์กีฬา (AJAX)
+│   └── borrows.php        # จัดการระบบยืม-คืน (AJAX)
+├── assets/
+│   ├── css/
+│   │   └── style.css      # Custom CSS (ถ้ามีนอกเหนือจาก Tailwind)
+│   └── js/
+│       ├── main.js        # ไฟล์ JS หลัก
+│       └── ajax_crud.js   # ไฟล์จัดการ AJAX Request
+├── includes/
+│   ├── header.php         # Navbar & <head>
+│   └── footer.php         # Footer & Scripts
+├── index.php              # หน้า Login
+├── dashboard.php          # หน้าหลักหลัง Login
+├── equipments.php         # หน้าจัดการอุปกรณ์ (CRUD)
+├── borrow_history.php     # หน้าประวัติการยืม-คืน
+├── docker-compose.yml     # ตั้งค่า Docker
+└── readme.md
